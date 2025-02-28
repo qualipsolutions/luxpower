@@ -102,7 +102,7 @@ function App() {
                 </label>
                 <div className="flex items-center gap-2">
                   <input
-                    type="text"
+                    type="number"
                     min="0"
                     max="100"
                     value={currentPercentage}
