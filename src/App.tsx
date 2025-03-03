@@ -93,7 +93,6 @@ function App() {
         <div className="grid md:grid-cols-2 gap-8">
           <div className="bg-gray-800 bg-opacity-50 backdrop-blur-sm p-6 rounded-xl shadow-xl">
             <h2 className="text-xl font-semibold mb-6">Calculations</h2>
-
             <div className="space-y-6">
               <div>
                 <label className="flex items-center gap-2">
@@ -102,18 +101,30 @@ function App() {
                 </label>
                 <div className="flex items-center gap-2">
                   <input
-                    type="number"
-                    min="0"
-                    max="100"
-                    value={currentPercentage}
-                    onChange={
-                      (e) => setCurrentPercentage(Number(e.target.value)) //Updates the currentPercentage state with the new value when the input changes.
-                    }
-                    onFocus={(e) => e.target.select()}
+                    type="text"
+                    value={currentPercentage === 0 ? "" : currentPercentage}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      //allow only numbers
+                      if (/^\d*$/.test(value)) {
+                        setCurrentPercentage(value === "" ? 0 : Number(value));
+                      }
+                    }}
+                    onKeyDown={(e) => {
+                      if (
+                        e.key.length === 1 &&
+                        !/[0-9]/.test(e.key) &&
+                        e.key !== "Backspace" &&
+                        e.key !== "Delete" &&
+                        e.key !== "ArrowLeft" &&
+                        e.key !== "ArrowRight"
+                      ) {
+                        e.preventDefault();
+                      }
+                    }}
                     className="w-full bg-gray-700 rounded px-3 py-2"
                   />
-
-                  <span className="w-8">{currentPercentage}%</span>
+                  <span className="w-8">%</span>
                 </div>
               </div>
 
@@ -124,11 +135,27 @@ function App() {
                 </label>
                 <div className="flex items-center gap-2">
                   <input
-                    type="number"
-                    min="0"
-                    value={dischargeRate}
-                    onChange={(e) => setDischargeRate(Number(e.target.value))} //Updates the currentPercentage state with the new value when the input changes.
-                    onFocus={(e) => e.target.select()}
+                    type="text"
+                    value={dischargeRate === 0 ? "" : dischargeRate}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      // Allow only numbers
+                      if (/^\d*$/.test(value)) {
+                        setDischargeRate(Number(value));
+                      }
+                    }}
+                    onKeyDown={(e) => {
+                      if (
+                        e.key.length === 1 &&
+                        !/[0-9]/.test(e.key) &&
+                        e.key !== "Backspace" &&
+                        e.key !== "Delete" &&
+                        e.key !== "ArrowLeft" &&
+                        e.key !== "ArrowRight"
+                      ) {
+                        e.preventDefault();
+                      }
+                    }}
                     className="w-full bg-gray-700 rounded px-3 py-2"
                   />
                   <span className="w-8">W</span>
@@ -163,15 +190,13 @@ function App() {
                     type="number"
                     min="0"
                     value={voltage}
-                    onChange={(e) => setVoltage(Number(e.target.value))} //Updates the currentPercentage state with the new value when the input changes.
+                    onChange={(e) => setVoltage(Number(e.target.value))}
                     onFocus={(e) => e.target.select()}
                     className="w-full bg-gray-700 rounded px-3 py-2"
                   />
                   <span className="w-8">V</span>
                 </div>
-              </div>
 
-              <div>
                 <label className="flex items-center gap-2">
                   Low Threshold
                   <Asterisk className="w-4 h-4 text-red-400" />
