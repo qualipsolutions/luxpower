@@ -208,7 +208,7 @@ function App() {
                   />
                   <span className="w-8">V</span>
                 </div>
-
+                <br />
                 <label className="flex items-center gap-2">
                   Low Threshold
                   <Asterisk className="w-4 h-4 text-red-400" />
