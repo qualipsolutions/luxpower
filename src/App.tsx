@@ -103,10 +103,11 @@ function App() {
                   <input
                     type="text"
                     value={currentPercentage === 0 ? "" : currentPercentage}
+                    placeholder="Bettery % must be between 1 - 100"
                     onChange={(e) => {
                       const value = e.target.value;
                       //allow only numbers
-                      if (/^\d*$/.test(value)) {
+                      if (/^\d{0,3}$/.test(value)) {
                         setCurrentPercentage(value === "" ? 0 : Number(value));
                       }
                     }}
@@ -122,7 +123,7 @@ function App() {
                         e.preventDefault();
                       }
                     }}
-                    className="w-full bg-gray-700 rounded px-3 py-2"
+                    className="w-full bg-gray-700 rounded px-3 py-2  placeholder-green-500 focus:placeholder-gray-500"
                   />
                   <span className="w-8">%</span>
                 </div>
@@ -137,10 +138,11 @@ function App() {
                   <input
                     type="text"
                     value={dischargeRate === 0 ? "" : dischargeRate}
+                    placeholder="Rate must not exceed 10 000 W"
                     onChange={(e) => {
                       const value = e.target.value;
                       // Allow only numbers
-                      if (/^\d*$/.test(value)) {
+                      if (/^\d{0,5}$/.test(value)) {
                         setDischargeRate(Number(value));
                       }
                     }}
@@ -156,7 +158,7 @@ function App() {
                         e.preventDefault();
                       }
                     }}
-                    className="w-full bg-gray-700 rounded px-3 py-2"
+                    className="w-full bg-gray-700 rounded px-3 py-2  placeholder-green-500 focus:placeholder-gray-500"
                   />
                   <span className="w-8">W</span>
                 </div>
@@ -170,9 +172,14 @@ function App() {
                 <div className="flex items-center gap-2">
                   <input
                     type="number"
-                    min="0"
                     value={batteryCapacity}
-                    onChange={(e) => setBatteryCapacity(Number(e.target.value))} //Updates the currentPercentage state with the new value when the input changes.
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      // Allow only numbers
+                      if (/^\d{0,5}$/.test(value)) {
+                        setBatteryCapacity(Number(value));
+                      }
+                    }}
                     onFocus={(e) => e.target.select()}
                     className="w-full bg-gray-700 rounded px-3 py-2"
                   />
@@ -188,9 +195,14 @@ function App() {
                 <div className="flex items-center gap-2">
                   <input
                     type="number"
-                    min="0"
                     value={voltage}
-                    onChange={(e) => setVoltage(Number(e.target.value))}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      // Allow only numbers
+                      if (/^\d{0,5}$/.test(value)) {
+                        setVoltage(Number(value));
+                      }
+                    }}
                     onFocus={(e) => e.target.select()}
                     className="w-full bg-gray-700 rounded px-3 py-2"
                   />
@@ -204,15 +216,19 @@ function App() {
                 <div className="flex items-center gap-2">
                   <input
                     type="number"
-                    min="0"
-                    max="50"
                     value={lowThreshold}
-                    onChange={(e) => setLowThreshold(Number(e.target.value))} //Updates the currentPercentage state with the new value when the input changes.
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      // Allow only numbers
+                      if (/^\d{0,2}$/.test(value)) {
+                        setLowThreshold(Number(value));
+                      }
+                    }}
                     onFocus={(e) => e.target.select()}
                     className="w-full bg-gray-700 rounded px-3 py-2"
                   />
 
-                  <span className="w-8">{lowThreshold}%</span>
+                  <span className="w-8">%</span>
                 </div>
               </div>
             </div>
