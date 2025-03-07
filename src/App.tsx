@@ -41,6 +41,8 @@ function App() {
   const [lowThreshold, setLowThreshold] = useState(10);
   const [remainingTime, setRemainingTime] = useState("");
   const [error, setError] = useState("");
+  const [percentageError, setPercentageError] = useState<string>("");
+  const [dischargeError, setDischargeError] = useState<string>("");
 
   useEffect(() => {
     validateAndCalculate();
@@ -83,6 +85,27 @@ function App() {
     setVoltage(48);
     setLowThreshold(10);
   };
+
+  useEffect(() => {
+    if (currentPercentage > 100) {
+      setPercentageError("Percentage cannot exceed 100%");
+    } else if (currentPercentage < 1 && currentPercentage !== 0) {
+      setPercentageError("Percentage must be at least 1%");
+    } else {
+      setPercentageError("");
+    }
+  }, [currentPercentage]);
+
+  useEffect(() => {
+    if (dischargeRate > 10000) {
+      setDischargeError("Power consumption cannot exceed 10,000W");
+    } else if (dischargeRate < 1 && dischargeRate !== 0) {
+      setDischargeError("Power consumption must be at least 1W");
+    } else {
+      setDischargeError("");
+    }
+  }, [dischargeRate]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 to-gray-900 text-gray-100">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -103,7 +126,7 @@ function App() {
                   <input
                     type="text"
                     value={currentPercentage === 0 ? "" : currentPercentage}
-                    placeholder="Bettery % must be between 1 - 100"
+                    placeholder="% must be between 1 - 100"
                     onChange={(e) => {
                       const value = e.target.value;
                       //allow only numbers
@@ -123,10 +146,13 @@ function App() {
                         e.preventDefault();
                       }
                     }}
-                    className="w-full bg-gray-700 rounded px-3 py-2  placeholder-green-500 focus:placeholder-gray-500"
+                    className="w-full bg-gray-700 rounded px-3 py-2  placeholder-gray-500 focus:placeholder-gray-500"
                   />
                   <span className="w-8">%</span>
                 </div>
+                {percentageError && (
+                  <p className="text-red-500 text-sm mt-1">{percentageError}</p>
+                )}
               </div>
 
               <div>
@@ -158,16 +184,19 @@ function App() {
                         e.preventDefault();
                       }
                     }}
-                    className="w-full bg-gray-700 rounded px-3 py-2  placeholder-green-500 focus:placeholder-gray-500"
+                    className="w-full bg-gray-700 rounded px-3 py-2  placeholder-gray-500 focus:placeholder-gray-500"
                   />
                   <span className="w-8">W</span>
                 </div>
+                {dischargeError && (
+                  <p className="text-red-500 text-sm mt-1">{dischargeError}</p>
+                )}
               </div>
 
               <div>
                 <label className="flex items-center gap-2">
                   Battery Capacity
-                  <Asterisk className="w-4 h-4 text-red-400" />
+                  <Asterisk className="w-4 h-4 text-red-500" />
                 </label>
                 <div className="flex items-center gap-2">
                   <input
@@ -190,7 +219,7 @@ function App() {
               <div>
                 <label className="flex items-center gap-2">
                   Battery Voltage
-                  <Asterisk className="w-4 h-4 text-red-400" />
+                  <Asterisk className="w-4 h-4 text-red-500" />
                 </label>
                 <div className="flex items-center gap-2">
                   <input
@@ -211,7 +240,7 @@ function App() {
                 <br />
                 <label className="flex items-center gap-2">
                   Low Threshold
-                  <Asterisk className="w-4 h-4 text-red-400" />
+                  <Asterisk className="w-4 h-4 text-red-500" />
                 </label>
                 <div className="flex items-center gap-2">
                   <input
@@ -241,14 +270,14 @@ function App() {
               <div className="flex items-center justify-center gap-3 mb-4">
                 <Clock
                   className={`w-6 h-6 ${
-                    error ? "text-red-400" : "text-green-400"
+                    error ? "text-red-500" : "text-green-400"
                   }`}
                 />
                 <span className="text-4xl font-bold">
                   {error ? "00:00" : remainingTime}
                 </span>
               </div>
-              {error && <p className="text-red-400 text-sm">{error}</p>}
+              {error && <p className="text-red-500 text-sm">{error}</p>}
             </div>
 
             <div className="flex gap-4 mt-6">
