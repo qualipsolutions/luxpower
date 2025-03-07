@@ -43,6 +43,9 @@ function App() {
   const [error, setError] = useState("");
   const [percentageError, setPercentageError] = useState<string>("");
   const [dischargeError, setDischargeError] = useState<string>("");
+  const [capacityError, setCapacityError] = useState<string>("");
+  const [voltageError, setVoltageError] = useState<string>("");
+  const [lowThresholdError, setLowThresholdError] = useState<string>("");
 
   useEffect(() => {
     validateAndCalculate();
@@ -106,6 +109,36 @@ function App() {
     }
   }, [dischargeRate]);
 
+  useEffect(() => {
+    if (batteryCapacity > 1000) {
+      setCapacityError("Capacity cannot exceed 1000Ah");
+    } else if (batteryCapacity < 1 && batteryCapacity !== 0) {
+      setCapacityError("capacity must be at least 1Ah");
+    } else {
+      setCapacityError("");
+    }
+  }, [batteryCapacity]);
+
+  useEffect(() => {
+    if (voltage > 1000) {
+      setVoltageError("Voltage cannot exceed 1000V");
+    } else if (voltage < 1 && voltage !== 0) {
+      setVoltageError("Voltage must be at least 1V");
+    } else {
+      setVoltageError("");
+    }
+  }, [voltage]);
+
+  useEffect(() => {
+    if (lowThreshold > 100) {
+      setLowThresholdError("LowThreshold cannot exceed 100%");
+    } else if (lowThreshold < 1 && lowThreshold !== 0) {
+      setLowThresholdError("LowThreshold must be at least 1%");
+    } else {
+      setLowThresholdError("");
+    }
+  }, [lowThreshold]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 to-gray-900 text-gray-100">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -126,7 +159,7 @@ function App() {
                   <input
                     type="text"
                     value={currentPercentage === 0 ? "" : currentPercentage}
-                    placeholder="% must be between 1 - 100"
+                    placeholder="Input percentage (1-100%)"
                     onChange={(e) => {
                       const value = e.target.value;
                       //allow only numbers
@@ -164,7 +197,7 @@ function App() {
                   <input
                     type="text"
                     value={dischargeRate === 0 ? "" : dischargeRate}
-                    placeholder="Rate must not exceed 10 000 W"
+                    placeholder="Enter consumption (max 10,000 W)"
                     onChange={(e) => {
                       const value = e.target.value;
                       // Allow only numbers
@@ -200,20 +233,24 @@ function App() {
                 </label>
                 <div className="flex items-center gap-2">
                   <input
-                    type="number"
-                    value={batteryCapacity}
+                    type="text"
+                    value={batteryCapacity === 0 ? "" : batteryCapacity}
+                    placeholder="Enter capacity (1-1000 Ah)"
                     onChange={(e) => {
                       const value = e.target.value;
                       // Allow only numbers
-                      if (/^\d{0,5}$/.test(value)) {
+                      if (/^\d{0,4}$/.test(value)) {
                         setBatteryCapacity(Number(value));
                       }
                     }}
                     onFocus={(e) => e.target.select()}
-                    className="w-full bg-gray-700 rounded px-3 py-2"
+                    className="w-full bg-gray-700 rounded px-3 py-2  placeholder-gray-500 focus:placeholder-gray-500"
                   />
                   <span className="w-8">Ah</span>
                 </div>
+                {capacityError && (
+                  <p className="text-red-500 text-sm mt-1">{capacityError}</p>
+                )}
               </div>
 
               <div>
@@ -223,20 +260,24 @@ function App() {
                 </label>
                 <div className="flex items-center gap-2">
                   <input
-                    type="number"
-                    value={voltage}
+                    type="text"
+                    value={voltage === 0 ? "" : voltage}
+                    placeholder="Set voltage (1-1000 V)"
                     onChange={(e) => {
                       const value = e.target.value;
                       // Allow only numbers
-                      if (/^\d{0,5}$/.test(value)) {
+                      if (/^\d{0,4}$/.test(value)) {
                         setVoltage(Number(value));
                       }
                     }}
                     onFocus={(e) => e.target.select()}
-                    className="w-full bg-gray-700 rounded px-3 py-2"
+                    className="w-full bg-gray-700 rounded px-3 py-2  placeholder-gray-500 focus:placeholder-gray-500"
                   />
                   <span className="w-8">V</span>
                 </div>
+                {voltageError && (
+                  <p className="text-red-500 text-sm mt-1">{voltageError}</p>
+                )}
                 <br />
                 <label className="flex items-center gap-2">
                   Low Threshold
@@ -244,21 +285,27 @@ function App() {
                 </label>
                 <div className="flex items-center gap-2">
                   <input
-                    type="number"
-                    value={lowThreshold}
+                    type="text"
+                    value={lowThreshold === 0 ? "" : lowThreshold}
+                    placeholder=" Enter Threshold percentage (1-100%)"
                     onChange={(e) => {
                       const value = e.target.value;
                       // Allow only numbers
-                      if (/^\d{0,2}$/.test(value)) {
+                      if (/^\d{0,3}$/.test(value)) {
                         setLowThreshold(Number(value));
                       }
                     }}
                     onFocus={(e) => e.target.select()}
-                    className="w-full bg-gray-700 rounded px-3 py-2"
+                    className="w-full bg-gray-700 rounded px-3 py-2  placeholder-gray-500 focus:placeholder-gray-500"
                   />
 
                   <span className="w-8">%</span>
                 </div>
+                {lowThresholdError && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {lowThresholdError}
+                  </p>
+                )}
               </div>
             </div>
           </div>
